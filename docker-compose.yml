@@ -1,0 +1,35 @@
+services:
+  miniserveb:
+    networks:
+      - proxy
+    user: 666:666
+    image: svenstaro/miniserve
+    container_name: downloadb
+    hostname: miniserveb
+    devices:
+      - /dev/fuse:/dev/fuse
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/pknw1/config/miniserveb:/config
+      - /tmp/miniserve:/tmp
+      - /media/movie-workprints:/tmp/movie-workprints:ro
+      - /media/music:/tmp/music:ro
+      - /media/tv:/tmp/tv:ro
+      - /media/education:/tmp/education:ro
+      - /media/youtube:/tmp/youtube:ro
+      - /media/software:/tmp/software:ro
+    environment:
+      - APP_GROUP=Content
+      - APP_LOGO=https://cdn3.iconfinder.com/data/icons/pyconic-icons-1-2/512/download-2-1024.png
+      - VIRTUAL_HOST=miniserve.pknw1.co.uk
+      - APP_NETWORK=secure
+      - VIRTUAL_PORT=8080
+      - TZ=Europe/Paris
+    command:
+      - /tmp -qzrg --title pknw1plex --hide-theme-selector --mkdir
+    restart: on-failure
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+networks:
+  proxy:
+    external: true
